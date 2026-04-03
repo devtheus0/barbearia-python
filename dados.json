@@ -1,0 +1,143 @@
+{
+    "clientes": [
+        "matheus",
+        "matheus",
+        "matheus ",
+        "matheus ",
+        "matheus ",
+        "matheus",
+        "matheus",
+        "pedro",
+        "matheus ",
+        "matheus ",
+        "matheus",
+        "pedro ",
+        "matheus ",
+        "pedro",
+        "thiago",
+        "jorge",
+        "matheus",
+        "paulo",
+        "gabriel",
+        "carlos",
+        "juninho"
+    ],
+    "servicos": [
+        {
+            "nome": "corte de cabelo",
+            "preco": 50
+        },
+        {
+            "nome": "barba",
+            "preco": 30
+        },
+        {
+            "nome": "sobrancelha",
+            "preco": 20
+        },
+        {
+            "nome": "corte + barba",
+            "preco": 80
+        }
+    ],
+    "agendamentos": [
+        {
+            "cliente": "matheus",
+            "servico": "corte de cabelo",
+            "preco": 50,
+            "dia": "23/03",
+            "horario": "08:00"
+        },
+        {
+            "cliente": "matheus ",
+            "servico": "corte de cabelo",
+            "preco": 50,
+            "dia": "30/03",
+            "horario": "17:00"
+        },
+        {
+            "cliente": "matheus",
+            "servico": "corte de cabelo",
+            "preco": 50,
+            "dia": "03/03",
+            "horario": "08:00"
+        },
+        {
+            "cliente": "matheus",
+            "servico": "corte de cabelo",
+            "preco": 50,
+            "dia": "09/03",
+            "horario": "08:00"
+        },
+        {
+            "cliente": "pedro",
+            "servico": "barba",
+            "preco": 30,
+            "dia": "02/03",
+            "horario": "09:00"
+        },
+        {
+            "cliente": "matheus ",
+            "servico": "barba",
+            "preco": 30,
+            "dia": "corte de cabelo",
+            "horario": "09:00"
+        },
+        {
+            "cliente": "matheus",
+            "servico": "corte de cabelo",
+            "preco": 50,
+            "dia": "03/04",
+            "horario": "08:00"
+        },
+        {
+            "cliente": "pedro",
+            "servico": "corte + barba",
+            "preco": 80,
+            "dia": "03/04",
+            "horario": "15:00"
+        },
+        {
+            "cliente": "thiago",
+            "servico": "barba",
+            "preco": 30,
+            "dia": "03/04",
+            "horario": "19:00"
+        },
+        {
+            "cliente": "matheus",
+            "servico": "corte de cabelo",
+            "preco": 50,
+            "dia": "03/04",
+            "horario": "09:00"
+        },
+        {
+            "cliente": "paulo",
+            "servico": "barba",
+            "preco": 30,
+            "dia": "05/04",
+            "horario": "09:00"
+        },
+        {
+            "cliente": "gabriel",
+            "servico": "corte + barba",
+            "preco": 80,
+            "dia": "03/04",
+            "horario": "10:00"
+        },
+        {
+            "cliente": "carlos",
+            "servico": "corte + barba",
+            "preco": 80,
+            "dia": "03/04",
+            "horario": "12:00"
+        },
+        {
+            "cliente": "juninho",
+            "servico": "barba",
+            "preco": 30,
+            "dia": "03/04",
+            "horario": "17:00"
+        }
+    ]
+}
