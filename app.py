@@ -15,8 +15,8 @@ def mostrar_menu():
     print('9 - Mostrar faturamento por dia')
     print('10 - Mostrar faturamento por mês')
     print('11 - Mostrar ranking de serviços')
-    print('12 - agenda do dia')
-    print('13 - agenda do mês')
+    print('12 - Agenda do dia')
+    print('13 - Agenda do mês')
     print('14 - Sair')
 
 
@@ -58,7 +58,7 @@ def carregar_dados():
         servicos = []
         agendamentos = []
 
-    # 🔥 SERVIÇOS PADRÃO AUTOMÁTICOS
+    # Serviços padrão
     if not servicos:
         servicos.extend([
             {'nome': 'corte de cabelo', 'preco': 50},
@@ -78,17 +78,17 @@ def mostrar_horarios():
     print(f'\nHorários para {dia}:\n')
 
     for h in horarios:
-        ocupado = False
-        for ag in agendamentos:
-            if ag["horario"] == h and ag["dia"] == dia:
-                ocupado = True
-                break
-
+        ocupado = any(ag["horario"] == h and ag["dia"] == dia for ag in agendamentos)
         print(h, '- Ocupado' if ocupado else '- Livre')
 
 
 def cadastrar_cliente():
     nome = input('Nome do cliente: ')
+
+    if nome in clientes:
+        print('Cliente já existe.')
+        return
+
     clientes.append(nome)
     salvar_dados()
     print('Cliente cadastrado!')
@@ -149,6 +149,10 @@ def agendar_servico():
 
     horario = input('Horário: ')
 
+    if horario not in horarios:
+        print('Horário inválido.')
+        return
+
     for ag in agendamentos:
         if ag["horario"] == horario and ag["dia"] == dia:
             print('Horário ocupado.')
@@ -168,39 +172,29 @@ def agendar_servico():
 
 def listar_clientes():
     print('\nClientes:')
-
     if not clientes:
         print('Nenhum cliente.')
         return
-
     for c in clientes:
         print('-', c)
 
 
 def listar_servicos():
     print('\nServiços:')
-
     if not servicos:
         print('Nenhum serviço.')
         return
-
     for s in servicos:
-        if isinstance(s, dict):
-            print(f'- {s["nome"]} - R$ {s["preco"]}')
-        else:
-            print(f'- {s} (formato antigo)')
+        print(f'- {s["nome"]} - R$ {s["preco"]}')
 
 
 def listar_agendamentos():
     print('\nAgendamentos:')
-
     if not agendamentos:
         print('Nenhum.')
         return
-
     for ag in agendamentos:
-        preco = ag.get("preco", 0)
-        print(f'{ag["dia"]} - {ag["horario"]} - {ag["cliente"]} - {ag["servico"]} - R$ {preco}')
+        print(f'{ag["dia"]} - {ag["horario"]} - {ag["cliente"]} - {ag["servico"]} - R$ {ag.get("preco", 0)}')
 
 
 def cancelar_agendamento():
@@ -218,125 +212,103 @@ def cancelar_agendamento():
 
 
 def agenda_do_dia():
-    dia = input('digite o dia do mes para ver a agenda:') 
-    
-    print(f'\n📅 agenda do dia {dia}:\n')
-    
+    dia = input('Digite o dia: ')
+    print(f'\n📅 Agenda do dia {dia}:\n')
+
     for h in horarios:
         agendamento_encontrado = None
-        
+
         for ag in agendamentos:
             if ag['dia'] == dia and ag['horario'] == h:
                 agendamento_encontrado = ag
                 break
-            
+
         if agendamento_encontrado:
-            print(f'{h} - {agendamento_encontrado['cliente']} - {agendamento_encontrado['servico']}')
+            print(f"{h} - {agendamento_encontrado['cliente']} - {agendamento_encontrado['servico']}")
         else:
-            print(f'{h} - Livre')    
-            
-    
+            print(f'{h} - Livre')
+
+
 def mostrar_faturamento_por_dia():
-        dia = input('Digite o dia e o mes para ver o faturamento: ')
-        
-        total = 0 
-        quantidade = 0
-        for ag in agendamentos:
-            if ag["dia"] == dia:
+    dia = input('Digite o dia: ')
+
+    total = 0
+    quantidade = 0
+
+    for ag in agendamentos:
+        if ag["dia"] == dia:
+            total += ag.get("preco", 0)
+            quantidade += 1
+
+    print(f'\n💰 Faturamento do dia {dia}: R$ {total}')
+    print(f'📊 Atendimentos: {quantidade}')
+
+    if quantidade > 0:
+        print(f'📈 Ticket médio: R$ {total / quantidade:.2f}')
+
+
+def faturamento_por_mes():
+    mes = input('Digite o mês (ex: 03): ')
+
+    total = 0
+    quantidade = 0
+
+    for ag in agendamentos:
+        if "/" in ag["dia"]:
+            partes = ag["dia"].split("/")
+            if len(partes) == 2 and partes[1] == mes:
                 total += ag.get("preco", 0)
                 quantidade += 1
-                
-        print(f'\n💰 faturamento do dia {dia}: R$ {total}')
-        print(f'📊 Total de atendimentos: {quantidade}')
-        
-        if quantidade > 0:
-            media = total / quantidade
-            print(f'📈 Ticket médio: R$ {media:.2f}')
-            
-                
+
+    print(f'\n💰 Faturamento do mês {mes}: R$ {total}')
+    print(f'📊 Atendimentos: {quantidade}')
+
+    if quantidade > 0:
+        print(f'📈 Ticket médio: R$ {total / quantidade:.2f}')
+
+
 def agenda_do_mes():
-    mes = input('digite o mes:')
-    
-    print(f'\n📅 agenda do mes {mes}:\n')
-    
+    mes = input('Digite o mês (ex: 03): ')
     dias = {}
-    
-    #organizar por dia 
+
     for ag in agendamentos:
         if "/" in ag['dia']:
             partes = ag['dia'].split("/")
-            
-        if len(partes) == 2:
-            mes_ag = partes[1]
-            
-            if mes_ag == mes:
-                if ag['dia']not in dias:
+            if len(partes) == 2 and partes[1] == mes:
+                if ag['dia'] not in dias:
                     dias[ag['dia']] = []
-                    
                 dias[ag['dia']].append(ag)
-                
-    if not dias:
-         print('nenhum agendamento esse mes.')
-         return
-     
-     #ordenar por dia
-    for dia in sorted(dias.keys()):
-        print(f'\n📅 {dia}:\n')
-         
-        #ordenar por horario
-        ags_ordenados = sorted(dias[dia], key=lambda x: x['horario'])
-         
-        for ag in ags_ordenados:
-             print(f'{ag["horario"]} - {ag["cliente"]} - {ag["servico"]}')
-             
 
-def faturamento_por_mes():
-    mes = input('digite o mes : ')
-    
-    total = 0
-    quantidade = 0
-    
-    for ag in agendamentos:
-        if "/" in ag["dia"]:
-            dia_agendamento = ag["dia"].split("/")
-            
-            if len(dia_agendamento) == 2:
-                mes_ag = dia_agendamento[1] 
-                
-                if mes_ag == mes:
-                    total += ag.get("preco", 0)
-                    quantidade += 1 
-    
-    print(f'\n💰 Faturamento do mês {mes}: R$ {total}')
-    print(f'📊 Total de atendimentos: {quantidade}')
-    
-    if quantidade > 0:
-        media = total / quantidade
-        print(f'📈 Ticket médio: R$ {media:.2f}')
-    
-    
+    if not dias:
+        print('Nenhum agendamento.')
+        return
+
+    for dia in sorted(dias.keys()):
+        print(f'\n📅 {dia}:')
+        for ag in sorted(dias[dia], key=lambda x: x['horario']):
+            print(f'{ag["horario"]} - {ag["cliente"]} - {ag["servico"]}')
+
+
 def ranking_servicos():
     print('\nRanking de serviços:\n')
-    
+
     if not agendamentos:
-        print('nenhum agendamento.')
+        print('Nenhum agendamento.')
         return
-    
-    contador = {} 
-    
+
+    contador = {}
+
     for ag in agendamentos:
-        servicos = ag.get('servico')
-        
-        if servicos:
-            contador[servicos] = contador.get(servicos, 0) + 1
-            
-    #ordem do maior para o menor
+        nome_servico = ag.get('servico')
+        if nome_servico:
+            contador[nome_servico] = contador.get(nome_servico, 0) + 1
+
     ranking = sorted(contador.items(), key=lambda x: x[1], reverse=True)
-            
-    for servicos, quantidade in ranking:
-        print(f'{servicos} - {quantidade} x')
-                
-                
+
+    for nome, qtd in ranking:
+        print(f'{nome} - {qtd}x')
+
+
 # ================= LOOP =================
 
 while True:
@@ -362,7 +334,7 @@ while True:
     elif op == '9':
         mostrar_faturamento_por_dia()
     elif op == '10':
-            faturamento_por_mes()
+        faturamento_por_mes()
     elif op == '11':
         ranking_servicos()
     elif op == '12':
@@ -371,8 +343,8 @@ while True:
         agenda_do_mes()
     elif op == '14':
         print('Encerrando...')
-        break 
+        break
     else:
         print('Opção inválida.')
         
-        print('obrigado por usar o sistema da Império Barber!\n')
+        
